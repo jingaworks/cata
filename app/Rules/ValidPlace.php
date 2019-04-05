@@ -9,15 +9,15 @@ use App\Place;
 class ValidPlace implements Rule
 {
 
-    private $region;
+    private $reg;
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($region)
+    public function __construct($reg)
     {
-        $this->region = $region;
+        $this->reg = $reg;
     }
 
     /**
@@ -30,9 +30,9 @@ class ValidPlace implements Rule
     public function passes($attribute, $value)
     {
         $place = Place::where('denloc', $value)->first();
-        $reg = Region::where('denj', $this->region)->first();
+        $region = Region::where('denj', $this->reg)->first();
 
-        return ($reg && $place) && ($place->jud == $reg->id) ? true : false;
+        return ($region && $place) && ($place->jud == $region->id) ? true : false;
 
     }
 
@@ -43,6 +43,6 @@ class ValidPlace implements Rule
      */
     public function message()
     {
-        return 'Localitatea aleasa nu face parte din Judetul ' . $this->region;
+        return 'Localitatea aleasa nu face parte din Judetul ' . $this->reg;
     }
 }
