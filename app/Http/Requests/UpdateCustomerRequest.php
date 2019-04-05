@@ -7,7 +7,7 @@ use App\Rules\CuiNumber;
 use App\Rules\PhoneNumber;
 use App\Rules\ValidPlace;
 
-class CreateCustomerRequest extends FormRequest
+class UpdateCustomerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,8 +28,8 @@ class CreateCustomerRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'min:3', 'max:100'],
-            'cui' => ['required', 'unique:customers', 'digits_between:2,10', new CuiNumber],
-            'phone' => ['required', 'unique:customers', new PhoneNumber],
+            'cui' => ['required', 'digits_between:2,10', 'unique:customers,cui,' . auth()->user()->customer->id, new CuiNumber],
+            'phone' => ['required', 'unique:customers,phone,' . auth()->user()->customer->id, new PhoneNumber],
             'region' => ['required', 'string', 'max:70', 'exists:regions,denj'],
             'place' => ['required', 'string', 'max:70', 'exists:places,denloc', new ValidPlace($this->region)],
             'address' => ['required', 'string', 'min:5', 'max:300'],
@@ -50,8 +50,8 @@ class CreateCustomerRequest extends FormRequest
             'name.max' => 'Minim 100 caractere!',
             
             'cui.required'  => 'CUI/CIF este obligatorui!',
-            'cui.unique'  => 'CUI/CIF este in uz!',
             'cui.digits_between'  => 'CUI/CIF este intre 2 si 10 cifre!',
+            'cui.unique'  => 'CUI/CIF este in uz!',
             
             'phone.required'  => 'Numarul de telefon este obligatorui!',
             'phone.unique'  => 'Numarul de telefon este in uz!',

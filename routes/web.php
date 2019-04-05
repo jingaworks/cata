@@ -15,18 +15,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
+Auth::routes(['verify' => true]);
 
 Route::group(['prefix' => 'cont', 'middleware' => ['auth']], function () {
-    
-    Route::get('/adauga-societate', 'CustomerController@create')->name('customer.create');
-    Route::post('/adauga-societate', 'CustomerController@store');
-    Route::get('/editeaza-societate', 'CustomerController@edit')->name('customer.edit');
-    Route::post('/editeaza-societate', 'CustomerController@update');
-    Route::get('/arata-societate', 'CustomerController@show')->name('customer.show');
+    Route::group(['middleware' => ['customer.restrict']], function () {
+        Route::get('/adauga-societate', 'CustomerController@create')->name('customer.create');
+        Route::post('/adauga-societate', 'CustomerController@store');
+    });
 
-
+    Route::group(['middleware' => ['customer', 'verified']], function () {
+        Route::get('/arata-societate', 'CustomerController@show')->name('customer.show');
+        Route::get('/editeaza-societate', 'CustomerController@edit')->name('customer.edit');
+        Route::post('/editeaza-societate', 'CustomerController@update');
+        
+        Route::get('/', 'HomeController@index')->name('dashboard');
+        Route::get('/home', 'HomeController@index')->name('home');
+    });
 });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Customer;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateCustomerRequest;
+use App\Http\Requests\UpdateCustomerRequest;
 
 class CustomerController extends Controller
 {
@@ -70,7 +71,7 @@ class CustomerController extends Controller
      * @param  \App\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(UpdateCustomerRequest $request)
     {
         auth()->user()->customer->update($request->all());
         return redirect()->route('customer.show')->with('status', 'Datele societatii au fost editate cu succes.');
